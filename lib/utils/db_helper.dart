@@ -34,12 +34,12 @@ class DBHelper {
 
   Future _createDB(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE $table (
+      CREATE TABLE $table(
         $columnId INTEGER PRIMARY KEY,
         $columnTitle TEXT,
         $columnDescription TEXT,
         $columnPriority INTEGER,
-        $columnDate TEXT,
+        $columnDate TEXT
       )
     ''');
   }
