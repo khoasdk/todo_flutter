@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_flutter/models/todo.dart';
+import 'package:todo_flutter/screens/todo_detail_screen.dart';
 import 'package:todo_flutter/utils/db_helper.dart';
 
 class TodoListScreen extends StatefulWidget {
@@ -61,7 +62,11 @@ class _TodoListScreenState extends State<TodoListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: navigateToDetail,
+        onPressed: () async {
+          var todo = Todo('title here...', DateTime.now().toString(), 'description here...');
+          var id = await helper.insertTodo(todo);
+          navigateToDetail(id);
+        },
       ),
     );
   }
@@ -71,7 +76,18 @@ class _TodoListScreenState extends State<TodoListScreen> {
     count = await helper.getCount();
   }
 
-  void navigateToDetail() {
+  void refreshScreen() {
     setState(() {});
+  }
+
+  void navigateToDetail(int id) async {
+    var todo = await helper.getTodo(id);
+    print('TODO ID: ${todo.id}');
+    var result = await Navigator.of(context).push(
+      MaterialPageRoute<bool>(
+        builder: (BuildContext context) => TodoDetailScreen(todo),
+      ),
+    );
+    if (result == true) refreshScreen();
   }
 }

@@ -54,6 +54,16 @@ class DBHelper {
     return todos;
   }
 
+  Future<Todo> getTodo(int id) async {
+    Database db = await database;
+    List<Map<String, dynamic>> data = await db.query(
+      table,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    return Todo.fromMap(data.first);
+  }
+
   Future<int> getCount() async {
     Database db = await database;
     var result = await db.rawQuery('SELECT COUNT(*) FROM $table');
@@ -68,13 +78,15 @@ class DBHelper {
 
   Future<int> updateTodo(Todo todo) async {
     Database db = await database;
-    var result = await db.update(table, todo.toMap(), where: '$columnId = ?', whereArgs: [todo.id]);
+    var result = await db.update(table, todo.toMap(),
+        where: '$columnId = ?', whereArgs: [todo.id]);
     return result;
   }
 
   Future<int> deleteTodo(int id) async {
     Database db = await database;
-    var result = await db.delete(table, where: '$columnId = ?', whereArgs: [id]);
+    var result =
+        await db.delete(table, where: '$columnId = ?', whereArgs: [id]);
     return result;
   }
 }
